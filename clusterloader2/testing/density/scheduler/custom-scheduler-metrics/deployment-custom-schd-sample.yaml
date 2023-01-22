@@ -16,5 +16,5 @@ spec:
     spec:
       schedulerName: default-scheduler
       containers:
-      - image: k8s.gcr.io/pause:3.1
+      - image: easzlab.io.local:5000/easzlab/pause:3.7
         name: {{.Name}}
