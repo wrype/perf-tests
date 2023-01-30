@@ -1,3 +1,5 @@
+{{$PROMETHEUS_NODE_SELECTOR := DefaultParam .CL2_PROMETHEUS_NODE_SELECTOR ""}}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -58,6 +60,7 @@ spec:
             value: "Admin"
       nodeSelector:
         kubernetes.io/os: linux
+        {{$PROMETHEUS_NODE_SELECTOR}}
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
