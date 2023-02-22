@@ -29,24 +29,17 @@ COPY nptest/nptest.go nptest.go
 COPY go.sum go.sum
 COPY go.mod go.mod
 
-RUN go build -o nptests
+RUN CGO_ENABLED=0 GOPROXY=https://goproxy.cn,direct go build -v -o nptests
 
-FROM debian:bullseye
+FROM ubuntu:18.04
 ENV LD_LIBRARY_PATH=/usr/local/lib
 
 MAINTAINER Girish Kalele <gkalele@google.com>
 # install binary and remove cache
 RUN apt-get update \
-    && apt-get install -y  curl wget net-tools gcc make libsctp-dev git autotools-dev automake \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y curl net-tools gcc make libsctp-dev autotools-dev automake qperf \
+    && apt-get clean
 RUN mkdir -p /tmp
-
-RUN git clone https://github.com/linux-rdma/qperf.git \
-    && cd qperf \
-    && ./cleanup \
-    && ./autogen.sh \
-    && ./configure --prefix=/usr/local --bindir /usr/local/bin \
-    && make && make install
 
 # Download and build iperf3 from sources
 RUN curl -LO https://downloads.es.net/pub/iperf/iperf-3.1.tar.gz && tar zxf iperf-3.1.tar.gz
@@ -54,7 +47,10 @@ RUN cd iperf-3.1 && ./configure --prefix=/usr/local --bindir /usr/local/bin && m
 
 # Download and build netperf from sources
 RUN curl -LO https://github.com/HewlettPackard/netperf/archive/netperf-2.7.0.tar.gz && tar -xzf netperf-2.7.0.tar.gz && mv netperf-netperf-2.7.0/ netperf-2.7.0
-RUN cd netperf-2.7.0 && ./configure --prefix=/usr/local --bindir /usr/local/bin && make CFLAGS=-fcommon && make install
+RUN cd netperf-2.7.0 && cp /usr/share/misc/config.sub /usr/share/misc/config.guess . \
+    && ./configure --prefix=/usr/local --bindir /usr/local/bin && make CFLAGS=-fcommon && make install
+
+RUN ln -sf /usr/bin/qperf /usr/local/bin/qperf
 
 COPY --from=builder /workspace/nptests /usr/bin/
 
