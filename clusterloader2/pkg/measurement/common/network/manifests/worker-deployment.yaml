@@ -16,6 +16,16 @@ spec:
         group: network
         name: worker
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: name
+                operator: In
+                values:
+                - worker
+            topologyKey: kubernetes.io/hostname
       containers:
       - image: gcr.io/k8s-testimages/netperfbenchmark:0.3
         name: worker
