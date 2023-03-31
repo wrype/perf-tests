@@ -19,7 +19,7 @@ spec:
         - containerPort: 9153
           name: dnsperfmetrics
           protocol: TCP
-        image: gcr.io/k8s-staging-perf-tests/dnsperfgo:v1.3.0
+        image: wrype/dnsperfgo:v1.3.0
         # Fetches the dns server from /etc/resolv.conf and sends 10 queries per second.
         # With searchpath expansion, this is 120 queries per second.
         # External names like google.com are expanded to 12 queries.

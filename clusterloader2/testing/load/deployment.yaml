@@ -34,7 +34,7 @@ spec:
       containers:
 {{if .EnableDNSTests}}
 {{if $USE_ADVANCED_DNSTEST}}
-      - image: gcr.io/k8s-staging-perf-tests/dnsperfgo:v1.3.0
+      - image: wrype/dnsperfgo:v1.3.0
         ports:
         - containerPort: 9153
           name: dnsperfmetrics
@@ -55,7 +55,7 @@ spec:
           ./dnsperfgo -duration 60s -idle-duration 10s -inputfile /var/configmap/all-queries -qps {{$dnsQPSPerClient}};
         name: {{.Name}}-dnsperf
 {{else}}
-      - image: registry.k8s.io/pause:3.1
+      - image: easzlab.io.local:5000/easzlab/pause:3.7
         name: {{.Name}}
 {{end}}
         resources:
