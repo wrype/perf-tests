@@ -514,11 +514,7 @@ var (
 				Parser:           parsePerfData,
 			}},
 			"BenchmarkPerfResults": []TestDescription{{
-				// Expected file prefix string is constructed as
-				// OutputFilePrefix+"_"+Name. Given we currently generate
-				// file prefixed with "BenchmarkPerfScheduling_" followed by a date,
-				// set the Name to an empty string.
-				Name:             "",
+				Name:             "benchmark",
 				OutputFilePrefix: "BenchmarkPerfScheduling",
 				Parser:           parsePerfData,
 			}},
@@ -627,6 +623,23 @@ var (
 		},
 	}
 
+	watchListDescriptions = TestDescriptions{
+		"E2E": {
+			"LoadResources": []TestDescription{{
+				Name:             "watch-list",
+				OutputFilePrefix: "ResourceUsageSummary",
+				Parser:           parseResourceUsageData,
+			}},
+		},
+		"APIServer": {
+			"LoadResponsiveness_PrometheusSimple": []TestDescription{{
+				Name:             "watch-list",
+				OutputFilePrefix: "APIResponsivenessPrometheus_simple",
+				Parser:           parsePerfData,
+			}},
+		},
+	}
+
 	jobTypeToDescriptions = map[string]TestDescriptions{
 		"performance":  performanceDescriptions,
 		"benchmark":    benchmarkDescriptions,
@@ -634,6 +647,7 @@ var (
 		"storage":      storageDescriptions,
 		"throughput":   throughputDescriptions,
 		"windows":      windowsDescriptions,
+		"watchlist":    watchListDescriptions,
 	}
 )
 
